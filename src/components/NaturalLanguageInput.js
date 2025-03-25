@@ -16,10 +16,20 @@ import {
   Collapse,
   Badge,
   Flex,
+  IconButton,
+  Tooltip,
   useColorModeValue,
   useDisclosure,
+  useToast
 } from '@chakra-ui/react';
-import { MdCheckCircle, MdInfoOutline, MdMusicNote } from 'react-icons/md';
+import { 
+  MdCheckCircle, 
+  MdInfoOutline, 
+  MdMusicNote, 
+  MdMic, 
+  MdMicOff, 
+  MdStop 
+} from 'react-icons/md';
 import { extractComponents, processNaturalLanguage } from '../utils/nlpProcessor';
 
 const NaturalLanguageInput = ({ onSubmit }) => {
@@ -27,14 +37,72 @@ const NaturalLanguageInput = ({ onSubmit }) => {
   const [detectedComponents, setDetectedComponents] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  const [isVoiceSupported, setIsVoiceSupported] = useState(false);
   const textareaRef = useRef(null);
+  const recognitionRef = useRef(null);
   const { isOpen, onToggle } = useDisclosure();
+  const toast = useToast();
 
   const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const tagBg = useColorModeValue('gray.100', 'gray.700');
   const hintBg = useColorModeValue('blue.50', 'blue.900');
   const hintBorder = useColorModeValue('blue.100', 'blue.800');
+  const listeningBg = useColorModeValue('red.50', 'red.900');
+  const listeningBorder = useColorModeValue('red.100', 'red.800');
+
+  useEffect(() => {
+    // Check if SpeechRecognition is supported
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      setIsVoiceSupported(true);
+      
+      // Initialize Web Speech API
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+        
+        setInput(transcript);
+      };
+      
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+        
+        toast({
+          title: 'Voice Input Error',
+          description: `Error: ${event.error}. Please try again.`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+    
+    return () => {
+      // Clean up speech recognition
+      if (recognitionRef.current) {
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onerror = null;
+        
+        if (isListening) {
+          recognitionRef.current.stop();
+        }
+      }
+    };
+  }, []); // Empty dependency array as we only want to run this once
 
   useEffect(() => {
     // Process input after user stops typing for a moment
@@ -84,6 +152,46 @@ const NaturalLanguageInput = ({ onSubmit }) => {
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
+  };
+  
+  const toggleListening = () => {
+    if (isListening) {
+      // Stop listening
+      recognitionRef.current.stop();
+      setIsListening(false);
+      
+      toast({
+        title: 'Voice Input Stopped',
+        description: 'Voice recording has been stopped.',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+      });
+    } else {
+      // Start listening
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+        
+        toast({
+          title: 'Voice Input Active',
+          description: 'Speak now. Your words will appear in the text area.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        
+        toast({
+          title: 'Voice Input Error',
+          description: 'Could not start voice recognition. Please try again.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
   };
 
   const renderComponentsPreview = () => {
@@ -226,28 +334,84 @@ const NaturalLanguageInput = ({ onSubmit }) => {
             <FormLabel htmlFor="music-description">
               Music Description
             </FormLabel>
-            <Textarea
-              ref={textareaRef}
-              id="music-description"
-              value={input}
-              onChange={handleInputChange}
-              placeholder="E.g., I want an upbeat 80s pop song with synth and electric guitar, something energetic and catchy"
-              rows={4}
-              resize="vertical"
-              mb={2}
-            />
+            <Box position="relative">
+              <Textarea
+                ref={textareaRef}
+                id="music-description"
+                value={input}
+                onChange={handleInputChange}
+                placeholder="E.g., I want an upbeat 80s pop song with synth and electric guitar, something energetic and catchy"
+                rows={4}
+                resize="vertical"
+                mb={2}
+                borderColor={isListening ? 'red.300' : undefined}
+                _hover={isListening ? { borderColor: 'red.400' } : undefined}
+                _focus={isListening ? { borderColor: 'red.500', boxShadow: '0 0 0 1px var(--chakra-colors-red-500)' } : undefined}
+              />
+              
+              {isListening && (
+                <Box 
+                  position="absolute" 
+                  top="2" 
+                  right="2" 
+                  px="2" 
+                  py="1"
+                  borderRadius="md"
+                  bg={listeningBg}
+                  borderWidth="1px"
+                  borderColor={listeningBorder}
+                >
+                  <Flex align="center">
+                    <Box 
+                      w="8px" 
+                      h="8px" 
+                      borderRadius="full" 
+                      bg="red.500" 
+                      mr="2"
+                      animation="pulse 1.5s infinite"
+                      sx={{
+                        '@keyframes pulse': {
+                          '0%': { opacity: 1 },
+                          '50%': { opacity: 0.4 },
+                          '100%': { opacity: 1 },
+                        },
+                      }}
+                    />
+                    <Text fontSize="xs" fontWeight="medium" color="red.600">
+                      Listening...
+                    </Text>
+                  </Flex>
+                </Box>
+              )}
+            </Box>
             
             {renderComponentsPreview()}
             
             <Flex justify="space-between" mt={4}>
-              <Text fontSize="xs" color="gray.500" alignSelf="center">
-                {input.length > 0 && (
-                  <>
-                    {input.length} characters 
-                    {isProcessing && " • Processing..."}
-                  </>
+              <HStack spacing={2}>
+                <Text fontSize="xs" color="gray.500" alignSelf="center">
+                  {input.length > 0 && (
+                    <>
+                      {input.length} characters 
+                      {isProcessing && " • Processing..."}
+                    </>
+                  )}
+                </Text>
+                
+                {isVoiceSupported && (
+                  <Tooltip label={isListening ? "Stop voice input" : "Use voice input"}>
+                    <IconButton
+                      aria-label={isListening ? "Stop voice input" : "Use voice input"}
+                      icon={isListening ? <MdStop /> : <MdMic />}
+                      size="sm"
+                      colorScheme={isListening ? "red" : "gray"}
+                      variant={isListening ? "solid" : "outline"}
+                      onClick={toggleListening}
+                    />
+                  </Tooltip>
                 )}
-              </Text>
+              </HStack>
+              
               <Button 
                 type="submit" 
                 isDisabled={!input.trim() || isProcessing}

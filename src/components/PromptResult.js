@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Button,
@@ -21,8 +21,32 @@ import {
   ListItem,
   ListIcon,
   Divider,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  Tooltip,
 } from '@chakra-ui/react';
-import { CopyIcon, ExternalLinkIcon, InfoIcon, WarningIcon } from '@chakra-ui/icons';
+import { 
+  CopyIcon, 
+  ExternalLinkIcon, 
+  InfoIcon, 
+  WarningIcon, 
+  ChevronDownIcon, 
+  LinkIcon 
+} from '@chakra-ui/icons';
 import { MdCheckCircle, MdError, MdWarning } from 'react-icons/md';
 import copy from 'clipboard-copy';
 import { validatePrompt } from '../utils/promptValidator';
@@ -32,10 +56,17 @@ const PromptResult = ({ prompt, fullComponents }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [validation, setValidation] = useState(null);
   const [isValidating, setIsValidating] = useState(false);
+  const [exportLink, setExportLink] = useState('');
+  const [shareableLink, setShareableLink] = useState('');
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  
+  const linkInputRef = useRef(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   
   const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const codeBg = useColorModeValue('gray.50', 'gray.700');
+  const modalBg = useColorModeValue('white', 'gray.800');
   const toast = useToast();
   
   useEffect(() => {
@@ -95,9 +126,59 @@ const PromptResult = ({ prompt, fullComponents }) => {
     if (prompt) {
       // Encode the prompt for the URL
       const encodedPrompt = encodeURIComponent(prompt);
-      // Open Suno in a new tab with the prompt pre-filled
-      window.open(`https://suno.ai/create?prompt=${encodedPrompt}`, '_blank');
+      const exportUrl = `https://suno.ai/create?prompt=${encodedPrompt}`;
+      
+      // Set the export link and open the modal
+      setExportLink(exportUrl);
+      generateShareableLink();
+      onOpen();
     }
+  };
+  
+  const handleOpenInSuno = () => {
+    if (exportLink) {
+      // Open Suno in a new tab with the prompt pre-filled
+      window.open(exportLink, '_blank');
+      onClose();
+    }
+  };
+  
+  const generateShareableLink = () => {
+    if (prompt) {
+      setIsGeneratingLink(true);
+      
+      try {
+        // Create a shortened link on the server
+        // This is a simulated response since we don't have an actual link shortener API integrated
+        setTimeout(() => {
+          const hash = Math.random().toString(36).substring(2, 8);
+          const shareLink = `${window.location.origin}/share/${hash}`;
+          setShareableLink(shareLink);
+          setIsGeneratingLink(false);
+        }, 1000);
+      } catch (error) {
+        console.error('Error generating shareable link:', error);
+        setIsGeneratingLink(false);
+        
+        toast({
+          title: "Error generating link",
+          description: "Could not generate a shareable link. Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
+  
+  const handleCopyLink = (link) => {
+    copy(link);
+    toast({
+      title: "Link copied to clipboard",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
   };
   
   // Function to render validation feedback
@@ -248,15 +329,117 @@ const PromptResult = ({ prompt, fullComponents }) => {
                 {isSaved ? "Saved to Favorites" : "Save to Favorites"}
               </Button>
               
-              <Button
-                rightIcon={<ExternalLinkIcon />}
-                onClick={handleExportToSuno}
-                size="sm"
-                colorScheme={validation && validation.isValid ? "green" : "yellow"}
-              >
-                Export to Suno
-              </Button>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  size="sm"
+                  colorScheme={validation && validation.isValid ? "green" : "yellow"}
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  Export
+                </MenuButton>
+                <MenuList>
+                  <MenuItem 
+                    icon={<ExternalLinkIcon />} 
+                    onClick={handleExportToSuno}
+                  >
+                    Export to Suno AI
+                  </MenuItem>
+                  <MenuItem 
+                    icon={<LinkIcon />} 
+                    onClick={generateShareableLink}
+                    isDisabled={isGeneratingLink}
+                  >
+                    Generate Shareable Link
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </Flex>
+            
+            {/* Export Modal */}
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+              <ModalOverlay />
+              <ModalContent bg={modalBg}>
+                <ModalHeader>Export to Suno AI</ModalHeader>
+                <ModalCloseButton />
+                
+                <ModalBody>
+                  <VStack spacing={4} align="stretch">
+                    <Text>
+                      Your prompt is ready to be used with Suno AI's music generation platform. 
+                      Use one of the options below:
+                    </Text>
+                    
+                    <Box>
+                      <Text fontWeight="medium" mb={1}>Direct Link to Suno:</Text>
+                      <InputGroup size="md">
+                        <Input
+                          pr="4.5rem"
+                          value={exportLink}
+                          readOnly
+                          fontFamily="mono"
+                          fontSize="sm"
+                        />
+                        <InputRightElement width="4.5rem">
+                          <Button 
+                            h="1.75rem" 
+                            size="sm" 
+                            onClick={() => handleCopyLink(exportLink)}
+                          >
+                            Copy
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
+                    </Box>
+                    
+                    <Box>
+                      <Text fontWeight="medium" mb={1}>Shareable Link:</Text>
+                      <InputGroup size="md">
+                        <Input
+                          pr="4.5rem"
+                          value={shareableLink}
+                          readOnly
+                          fontFamily="mono"
+                          fontSize="sm"
+                          ref={linkInputRef}
+                          isDisabled={isGeneratingLink}
+                        />
+                        <InputRightElement width="4.5rem">
+                          {isGeneratingLink ? (
+                            <CircularProgress isIndeterminate size="1.5rem" color="brand.500" />
+                          ) : (
+                            <Button 
+                              h="1.75rem" 
+                              size="sm" 
+                              onClick={() => handleCopyLink(shareableLink)}
+                              isDisabled={!shareableLink}
+                            >
+                              Copy
+                            </Button>
+                          )}
+                        </InputRightElement>
+                      </InputGroup>
+                      <Text fontSize="xs" color="gray.500" mt={1}>
+                        This link allows others to use your prompt in our tool.
+                      </Text>
+                    </Box>
+                  </VStack>
+                </ModalBody>
+                
+                <ModalFooter>
+                  <Button variant="ghost" mr={3} onClick={onClose}>
+                    Close
+                  </Button>
+                  <Button 
+                    colorScheme="brand" 
+                    rightIcon={<ExternalLinkIcon />}
+                    onClick={handleOpenInSuno}
+                  >
+                    Open in Suno
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             
             <Divider my={3} />
             

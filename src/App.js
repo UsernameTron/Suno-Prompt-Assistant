@@ -8,6 +8,11 @@ import {
   GridItem, 
   Button, 
   Icon,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
   useColorModeValue, 
   useToast,
   useDisclosure,
@@ -19,6 +24,7 @@ import Footer from './components/Footer';
 import NaturalLanguageInput from './components/NaturalLanguageInput';
 import PromptBuilder from './components/PromptBuilder';
 import PromptResult from './components/PromptResult';
+import AudioPreview from './components/AudioPreview';
 import Dashboard from './components/Dashboard';
 import SuggestionPanel from './components/SuggestionPanel';
 import { extractComponents, optimizePrompt } from './utils/nlpProcessor';
@@ -302,10 +308,28 @@ function App() {
                 components={promptComponents}
                 onChange={handlePromptComponentsChange}
               />
-              <PromptResult 
-                prompt={generatedPrompt}
-                fullComponents={promptComponents}
-              />
+              
+              {/* Results Tabs */}
+              <Tabs colorScheme="brand" variant="line" isLazy>
+                <TabList>
+                  <Tab>Prompt Result</Tab>
+                  <Tab>Audio Preview</Tab>
+                </TabList>
+                
+                <TabPanels>
+                  <TabPanel px={0}>
+                    <PromptResult 
+                      prompt={generatedPrompt}
+                      fullComponents={promptComponents}
+                    />
+                  </TabPanel>
+                  <TabPanel px={0}>
+                    <AudioPreview 
+                      prompt={generatedPrompt}
+                    />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </VStack>
           </GridItem>
           
