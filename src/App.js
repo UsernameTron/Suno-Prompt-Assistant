@@ -16,6 +16,10 @@ function App() {
     tempo: '',
     instruments: [],
     decade: '',
+    region: '',
+    vocals: '',
+    structure: '',
+    descriptors: '',
     description: '',
   });
   const [generatedPrompt, setGeneratedPrompt] = useState('');
@@ -49,6 +53,10 @@ function App() {
         tempo: components.tempo || '',
         instruments: components.instruments || [],
         decade: components.decade || '',
+        region: components.region || '',
+        vocals: components.vocals || '',
+        structure: components.structure || '',
+        descriptors: components.descriptors || '',
         description: components.description || text
       });
       
@@ -105,7 +113,10 @@ function App() {
 
   // Simple fallback prompt generator if optimization fails
   const generateSimplePrompt = (components) => {
-    const { genre, mood, tempo, instruments, decade, description } = components;
+    const { 
+      genre, mood, tempo, instruments, decade, 
+      region, vocals, structure, descriptors, description 
+    } = components;
     const parts = [];
     
     if (genre) parts.push(genre.toUpperCase());
@@ -113,6 +124,10 @@ function App() {
     if (tempo) parts.push(tempo);
     if (instruments && instruments.length > 0) parts.push(instruments.join(', ').toLowerCase());
     if (decade) parts.push(decade);
+    if (region) parts.push(region);
+    if (vocals) parts.push(vocals);
+    if (structure) parts.push(structure);
+    if (descriptors) parts.push(descriptors);
     if (description) parts.push(description);
     
     return parts.join(', ');

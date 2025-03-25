@@ -20,7 +20,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MdCheckCircle, MdInfoOutline, MdMusicNote } from 'react-icons/md';
-import { extractComponents } from '../utils/nlpProcessor';
+import { extractComponents, processNaturalLanguage } from '../utils/nlpProcessor';
 
 const NaturalLanguageInput = ({ onSubmit }) => {
   const [input, setInput] = useState('');

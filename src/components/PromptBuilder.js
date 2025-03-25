@@ -24,18 +24,17 @@ import {
 } from '@chakra-ui/react';
 import { MdInfo, MdAutoAwesome, MdAdd } from 'react-icons/md';
 
-// Import data from our data files
-import genres, { getGenreNames } from '../data/genres';
-import moods, { getMoodNames } from '../data/moods';
-import decades, { getDecadeNames } from '../data/decades';
-import instruments, { getInstrumentNames, getInstrumentsByCategory } from '../data/instruments';
+// Import data from genres.json
+import promptData from '../data/genres.json';
 import { getPromptImprovementSuggestions } from '../utils/promptValidator';
 
-// Get options from data files
-const genreOptions = getGenreNames();
-const moodOptions = getMoodNames();
-const decadeOptions = getDecadeNames();
-const instrumentOptions = getInstrumentNames();
+// Get options from data file
+const genreOptions = promptData.genres;
+const moodOptions = promptData.moods;
+const decadeOptions = promptData.decades;
+const regionOptions = promptData.regions;
+const vocalOptions = promptData.vocals;
+const structureOptions = promptData.structures;
 
 const PromptBuilder = ({ components, onChange }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -229,6 +228,42 @@ const PromptBuilder = ({ components, onChange }) => {
             </FormControl>
           </GridItem>
           
+          <GridItem>
+            <FormControl>
+              <FormLabel>Region</FormLabel>
+              <Select 
+                placeholder="Select region"
+                value={components.region}
+                onChange={(e) => handleChange('region', e.target.value)}
+              >
+                {regionOptions.map(region => (
+                  <option key={region} value={region}>{region}</option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Geographic or cultural influence
+              </FormHelperText>
+            </FormControl>
+          </GridItem>
+          
+          <GridItem>
+            <FormControl>
+              <FormLabel>Vocals</FormLabel>
+              <Select 
+                placeholder="Select vocal style"
+                value={components.vocals}
+                onChange={(e) => handleChange('vocals', e.target.value)}
+              >
+                {vocalOptions.map(vocal => (
+                  <option key={vocal} value={vocal}>{vocal}</option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Vocal characteristics
+              </FormHelperText>
+            </FormControl>
+          </GridItem>
+          
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <FormControl>
               <FormLabel>Instruments</FormLabel>
@@ -287,6 +322,38 @@ const PromptBuilder = ({ components, onChange }) => {
                   </Tag>
                 ))}
               </Flex>
+            </FormControl>
+          </GridItem>
+          
+          <GridItem>
+            <FormControl>
+              <FormLabel>Structure</FormLabel>
+              <Select 
+                placeholder="Select structure"
+                value={components.structure}
+                onChange={(e) => handleChange('structure', e.target.value)}
+              >
+                {structureOptions.map(structure => (
+                  <option key={structure} value={structure}>{structure}</option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Song structure and form
+              </FormHelperText>
+            </FormControl>
+          </GridItem>
+          
+          <GridItem>
+            <FormControl>
+              <FormLabel>Descriptors (Title Case)</FormLabel>
+              <Input 
+                placeholder="E.g., Dreamy, Emotional, Cinematic"
+                value={components.descriptors || ''}
+                onChange={(e) => handleChange('descriptors', e.target.value)}
+              />
+              <FormHelperText>
+                Comma separated adjectives
+              </FormHelperText>
             </FormControl>
           </GridItem>
           

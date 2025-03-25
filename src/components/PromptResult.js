@@ -258,9 +258,27 @@ const PromptResult = ({ prompt, fullComponents }) => {
               </Button>
             </Flex>
             
+            <Divider my={3} />
+            
+            <Heading as="h3" size="sm" mb={3}>
+              Prompt Components
+            </Heading>
+            
+            <VStack align="stretch" spacing={2}>
+              {fullComponents && Object.entries(fullComponents).map(([key, value]) => 
+                value ? (
+                  <Flex key={key} justify="space-between">
+                    <Text fontWeight="medium" textTransform="capitalize">{key}:</Text>
+                    <Text>{Array.isArray(value) ? value.join(', ') : value}</Text>
+                  </Flex>
+                ) : null
+              )}
+            </VStack>
+            
             <Alert 
               status={validation && validation.isValid ? "success" : "info"} 
               borderRadius="md"
+              mt={4}
             >
               <AlertIcon />
               <Box>

@@ -1,0 +1,40 @@
+{
+  "genres": [
+    "POP", "ROCK", "HIP HOP", "R&B", "ELECTRONIC", "JAZZ", "CLASSICAL", "COUNTRY",
+    "FOLK", "METAL", "PUNK", "BLUES", "REGGAE", "SOUL", "FUNK", "AMBIENT", "WORLD"
+  ],
+  "moods": [
+    "Happy", "Sad", "Energetic", "Calm", "Aggressive", "Peaceful", "Romantic", "Nostalgic",
+    "Dreamy", "Dark", "Epic", "Playful", "Mysterious", "Uplifting", "Melancholic", "Ethereal",
+    "Triumphant", "Tense", "Angry"
+  ],
+  "decades": [
+    "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s", "2020s",
+    "Classical Era", "Baroque Era", "Medieval Era"
+  ],
+  "regions": [
+    "American", "British", "European", "Asian", "African", "Latin American",
+    "Caribbean", "Middle Eastern", "Scandinavian", "Mediterranean", "Global"
+  ],
+  "vocals": [
+    "Male vocals", "Female vocals", "Choir", "Vocoder", "Auto-tune", "Harmonies",
+    "Spoken word", "Rap", "Acapella", "Instrumental (no vocals)", "Falsetto", "Whisper"
+  ],
+  "structures": [
+    "Verse-Chorus", "AABA", "Intro-Verse-Chorus-Bridge-Outro", "Loop-based",
+    "Through-composed", "Sonata form", "Progressive", "Free-form", "Minimalist", "Ambient"
+  ],
+  "common_instruments": [
+    "guitar", "piano", "drums", "bass", "synthesizer", "violin", "saxophone",
+    "trumpet", "flute", "cello", "harp", "organ", "808", "percussion"
+  ],
+  "tempo_descriptors": [
+    "Slow", "Medium", "Fast", "Very fast", "Uptempo", "Downtempo", "BPM",
+    "Allegro", "Adagio", "Moderato", "Presto", "Largo"
+  ],
+  "common_descriptors": [
+    "Melodic", "Rhythmic", "Harmonic", "Dissonant", "Consonant", "Catchy",
+    "Experimental", "Cinematic", "Atmospheric", "Driving", "Pulsing", "Emotional",
+    "Intense", "Subtle", "Raw", "Polished", "Distorted", "Clean", "Acoustic", "Electronic"
+  ]
+}
