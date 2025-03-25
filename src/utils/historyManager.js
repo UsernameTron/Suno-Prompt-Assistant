@@ -63,6 +63,23 @@ export const getHistory = (limit) => {
 };
 
 /**
+ * Get a specific history item by ID
+ * @param {string} id - The ID of the history item to retrieve
+ * @returns {Object|null} - The history item or null if not found
+ */
+export const getHistoryItem = (id) => {
+  if (!id) return null;
+  
+  try {
+    const history = getHistory();
+    return history.find(item => item.id === id) || null;
+  } catch (error) {
+    console.error('Error retrieving history item:', error);
+    return null;
+  }
+};
+
+/**
  * Clear all prompt history
  * @returns {boolean} - Success indicator
  */
@@ -227,6 +244,7 @@ const generateId = () => {
 export default {
   saveToHistory,
   getHistory,
+  getHistoryItem,
   clearHistory,
   addToFavorites,
   removeFromFavorites,

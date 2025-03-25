@@ -7,9 +7,11 @@ A web application that helps users create optimized prompts for Suno AI's music 
 - Natural language processing for music descriptions
 - Real-time prompt validation and optimization
 - Interactive prompt builder with component-specific formatting
-- History and favorites management
+- Dashboard with history, favorites, templates, and insights
+- AI-powered suggestions for prompt improvement
+- Template gallery with pre-configured music styles
+- Analytics and user insights
 - Direct integration with Suno AI
-- Analytics and personalized suggestions
 
 ## Getting Started
 
@@ -50,8 +52,13 @@ This will start both the React frontend and the Express backend in development m
 
 1. Enter a natural language description of the music you want to create
 2. Use the structured prompt builder to refine the components
-3. Copy the generated prompt or export directly to Suno AI
-4. Save your favorite prompts for future use
+3. Access the Dashboard to:
+   - Browse and apply templates for different music styles
+   - View AI-powered suggestions to improve your prompt
+   - Access your history and favorite prompts
+   - View analytics about your music creation patterns
+4. Copy the generated prompt or export directly to Suno AI
+5. Save your favorite prompts for future use
 
 ## Built With
 
