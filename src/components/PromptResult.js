@@ -5,7 +5,7 @@ import {
   Text,
   VStack,
   Heading,
-  useColorModeValue,
+  useColorMode,
   useToast,
   Code,
   Alert,
@@ -63,10 +63,11 @@ const PromptResult = ({ prompt, fullComponents }) => {
   const linkInputRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const codeBg = useColorModeValue('gray.50', 'gray.700');
-  const modalBg = useColorModeValue('white', 'gray.800');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const codeBg = colorMode === 'light' ? 'gray.50' : 'gray.700';
+  const modalBg = colorMode === 'light' ? 'white' : 'gray.800';
   const toast = useToast();
   
   useEffect(() => {

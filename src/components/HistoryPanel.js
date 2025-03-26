@@ -9,7 +9,7 @@ import {
   Flex,
   Divider,
   Icon,
-  useColorModeValue,
+  useColorMode,
   SimpleGrid,
   Tabs,
   TabList,
@@ -50,9 +50,10 @@ const HistoryPanel = ({ onUsePrompt }) => {
   
   const toast = useToast();
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const hoverBg = useColorModeValue('gray.50', 'gray.700');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const hoverBg = colorMode === 'light' ? 'gray.50' : 'gray.700';
   
   useEffect(() => {
     loadHistory();

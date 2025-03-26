@@ -18,7 +18,7 @@ import {
   Flex,
   IconButton,
   Tooltip,
-  useColorModeValue,
+  useColorMode,
   useDisclosure,
   useToast
 } from '@chakra-ui/react';
@@ -44,13 +44,14 @@ const NaturalLanguageInput = ({ onSubmit }) => {
   const { isOpen, onToggle } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const tagBg = useColorModeValue('gray.100', 'gray.700');
-  const hintBg = useColorModeValue('blue.50', 'blue.900');
-  const hintBorder = useColorModeValue('blue.100', 'blue.800');
-  const listeningBg = useColorModeValue('red.50', 'red.900');
-  const listeningBorder = useColorModeValue('red.100', 'red.800');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const tagBg = colorMode === 'light' ? 'gray.100' : 'gray.700';
+  const hintBg = colorMode === 'light' ? 'blue.50' : 'blue.900';
+  const hintBorder = colorMode === 'light' ? 'blue.100' : 'blue.800';
+  const listeningBg = colorMode === 'light' ? 'red.50' : 'red.900';
+  const listeningBorder = colorMode === 'light' ? 'red.100' : 'red.800';
 
   useEffect(() => {
     // Check if SpeechRecognition is supported

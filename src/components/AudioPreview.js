@@ -11,7 +11,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  useColorModeValue,
+  useColorMode,
   Badge,
   Tooltip,
 } from '@chakra-ui/react';
@@ -30,10 +30,11 @@ const AudioPreview = ({ prompt }) => {
   const canvasRef = useRef(null);
   const canvasCtxRef = useRef(null);
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const trackBg = useColorModeValue('gray.100', 'gray.600');
-  const trackFilled = useColorModeValue('brand.500', 'brand.200');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const trackBg = colorMode === 'light' ? 'gray.100' : 'gray.600';
+  const trackFilled = colorMode === 'light' ? 'brand.500' : 'brand.200';
   
   useEffect(() => {
     // Initialize canvas for visualization

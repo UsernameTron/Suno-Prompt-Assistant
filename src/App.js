@@ -13,7 +13,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  useColorModeValue, 
+  useColorMode, 
   useToast,
   useDisclosure,
   useBreakpointValue
@@ -48,7 +48,8 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, lg: false });

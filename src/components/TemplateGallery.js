@@ -16,7 +16,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Select,
-  useColorModeValue,
+  useColorMode,
   Tooltip,
   Icon,
 } from '@chakra-ui/react';
@@ -27,11 +27,12 @@ const TemplateGallery = ({ onSelectTemplate }) => {
   const [filter, setFilter] = useState('all');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const hoverBg = useColorModeValue('gray.50', 'gray.700');
-  const selectedBg = useColorModeValue('purple.50', 'purple.900');
-  const selectedBorder = useColorModeValue('purple.200', 'purple.700');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const hoverBg = colorMode === 'light' ? 'gray.50' : 'gray.700';
+  const selectedBg = colorMode === 'light' ? 'purple.50' : 'purple.900';
+  const selectedBorder = colorMode === 'light' ? 'purple.200' : 'purple.700';
   
   // Apply filters to templates
   const getFilteredTemplates = () => {

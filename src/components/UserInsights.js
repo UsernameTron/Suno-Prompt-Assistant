@@ -15,7 +15,7 @@ import {
   Badge,
   Progress,
   Divider,
-  useColorModeValue,
+  useColorMode,
   Button,
 } from '@chakra-ui/react';
 import { 
@@ -34,9 +34,10 @@ const UserInsights = () => {
   const [moodDistribution, setMoodDistribution] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const cardBg = useColorModeValue('gray.50', 'gray.700');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const cardBg = colorMode === 'light' ? 'gray.50' : 'gray.700';
   
   useEffect(() => {
     // Load data and calculate statistics

@@ -5,13 +5,14 @@ import {
   Text,
   Link,
   Flex,
-  useColorModeValue,
+  useColorMode,
 } from '@chakra-ui/react';
 
 const Footer = () => {
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const textColor = useColorModeValue('gray.600', 'gray.400');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const textColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
 
   return (
     <Box 

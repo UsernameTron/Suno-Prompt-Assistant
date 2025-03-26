@@ -6,7 +6,6 @@ import {
   Button,
   IconButton,
   useColorMode,
-  useColorModeValue,
   Container,
   HStack,
 } from '@chakra-ui/react';
@@ -14,8 +13,8 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
 
   return (
     <Box 

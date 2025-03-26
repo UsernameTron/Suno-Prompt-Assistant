@@ -10,7 +10,7 @@ import {
   Divider,
   Tag,
   Icon,
-  useColorModeValue,
+  useColorMode,
   SimpleGrid,
   Collapse,
   Badge,
@@ -22,12 +22,13 @@ const SuggestionPanel = ({ components, onApplySuggestion, onUseTemplate, isOpen 
   const { suggestions, recommendedTemplates } = generateSuggestions(components);
   const creativeIdeas = generateCreativeIdeas(components);
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const suggestionBg = useColorModeValue('purple.50', 'purple.900');
-  const suggestionBorder = useColorModeValue('purple.100', 'purple.800');
-  const ideaBg = useColorModeValue('blue.50', 'blue.900');
-  const ideaBorder = useColorModeValue('blue.100', 'blue.800');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
+  const suggestionBg = colorMode === 'light' ? 'purple.50' : 'purple.900';
+  const suggestionBorder = colorMode === 'light' ? 'purple.100' : 'purple.800';
+  const ideaBg = colorMode === 'light' ? 'blue.50' : 'blue.900';
+  const ideaBorder = colorMode === 'light' ? 'blue.100' : 'blue.800';
   
   const getTypeIcon = (type) => {
     switch (type) {

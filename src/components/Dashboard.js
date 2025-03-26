@@ -9,7 +9,7 @@ import {
   TabPanel,
   Icon,
   Text,
-  useColorModeValue,
+  useColorMode,
   Grid,
   GridItem,
   Button,
@@ -50,8 +50,9 @@ const Dashboard = ({
   const onOpen = internalDisclosure.onOpen;
   const onClose = externalOnClose || internalDisclosure.onClose;
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
   
   const isDrawer = useBreakpointValue({ base: true, lg: false });
   

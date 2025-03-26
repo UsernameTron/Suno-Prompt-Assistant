@@ -20,7 +20,7 @@ import {
   Tooltip,
   IconButton,
   Badge,
-  useColorModeValue,
+  useColorMode,
 } from '@chakra-ui/react';
 import { MdInfo, MdAutoAwesome, MdAdd } from 'react-icons/md';
 
@@ -42,8 +42,9 @@ const PromptBuilder = ({ components, onChange }) => {
   const [newInstrument, setNewInstrument] = useState('');
   const [instrumentSuggestions, setInstrumentSuggestions] = useState([]);
   
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const { colorMode } = useColorMode();
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.800';
+  const borderColor = colorMode === 'light' ? 'gray.200' : 'gray.700';
   const progressColorScheme = completionScore > 70 ? 'green' : completionScore > 40 ? 'yellow' : 'red';
   
   useEffect(() => {
@@ -377,10 +378,10 @@ const PromptBuilder = ({ components, onChange }) => {
           <Box 
             mt={4} 
             p={3} 
-            bg={useColorModeValue('yellow.50', 'yellow.900')} 
+            bg={colorMode === 'light' ? 'yellow.50' : 'yellow.900'} 
             borderRadius="md"
             borderWidth="1px"
-            borderColor={useColorModeValue('yellow.200', 'yellow.700')}
+            borderColor={colorMode === 'light' ? 'yellow.200' : 'yellow.700'}
           >
             <Flex align="center" mb={2}>
               <MdAutoAwesome />
